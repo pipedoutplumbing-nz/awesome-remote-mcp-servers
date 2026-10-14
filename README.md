@@ -2151,6 +2151,9 @@ Entries with a [Glama connector](https://glama.ai/mcp/connectors) badge have bee
 - [GovAuctions.app](https://govauctions.app) `https://govauctions.app/api/mcp`
   [![GovAuctions.app MCP connector](https://glama.ai/mcp/connectors/app.govauctions/govauctions/badges/score.svg)](https://glama.ai/mcp/connectors/app.govauctions/govauctions)
   🔓 - Government surplus auctions in the US, UK, CA and AU, with sold-price comps and resale scores.
+- [GovInbox](https://getgovinbox.com) `https://mcp.getgovinbox.com/plugin`
+  [![GovInbox MCP connector](https://glama.ai/mcp/connectors/com.getgovinbox/govinbox/badges/score.svg)](https://glama.ai/mcp/connectors/com.getgovinbox/govinbox)
+  🔐 - Daily watch on U.S. federal contract opportunities; deepest coverage on set-asides.
 - [High Signal](https://highsignal.app) `https://mcp.highsignal.app/high-signal/mcp`
   [![High Signal MCP connector](https://glama.ai/mcp/connectors/app.highsignal.mcp/high-signal/badges/score.svg)](https://glama.ai/mcp/connectors/app.highsignal.mcp/high-signal)
   🔓 - Read published High Signal daily briefs, signals and their linked evidence through a bounded, read-only public feed.
