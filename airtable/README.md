@@ -10,15 +10,22 @@ They are a backup copy. The live versions are stored in Airtable itself.
 
 ## How sign-in works
 
-There's no PIN. People open the page in the Airtable phone app, already signed in to Airtable.
-The page looks up their **Airtable login email** in the **Staff** table's **Email** field to work out who they are.
-If the emails don't match exactly, the page says so.
+1. Open the page in the Airtable phone app.
+2. Tap your name.
+3. Type your 4-digit PIN. The first time, you make up your own PIN and type it twice.
+4. It stays unlocked on that phone for 12 hours. Tap the company name at the top, then **Sign out**, to lock it sooner.
+
+- The Office app only lists people whose Staff **Role** contains "Owner" or "Admin".
+- PINs are saved in the Staff table's **App PIN (scrambled)** field, scrambled so nobody can read them.
+- **Forgot a PIN?** Clear that person's cell. They'll make a new PIN next time they open the app.
+- Whoever's Airtable login email matches the Staff table goes to the top of the name list.
 
 ## What each page reads and writes
 
 **Crew app**
 - Reads: Jobs (no prices), Staff (no pay rates), Businesses, Clients (name, contact, phone), Time entries (last 14 days).
 - Writes:
+  - Staff: each person's own scrambled PIN, the first time they set one.
   - Jobs: Status (Scheduled → In Progress → Completed), Completion Date, Notes and Work Done Summary. New jobs are created here too.
   - Time entries: clocking on creates an entry with Status "In progress". Clocking off fills in End Time and sets Status to "Todo".
 

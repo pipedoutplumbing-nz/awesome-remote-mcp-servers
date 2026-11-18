@@ -17,6 +17,8 @@ import {
     SquaresFourIcon,
     ClipboardTextIcon,
     UsersIcon,
+    CaretRightIcon,
+    BackspaceIcon,
 } from '@phosphor-icons/react';
 
 const T = {
@@ -117,6 +119,223 @@ function selectName(rec: AtRecord, table: Table | null, id: string): string {
     return v && v.name ? v.name : '';
 }
 
+const PIN_FIELD = 'fld8IvcPnVwArQNNE';
+const LOCK_KEY = 'tradehouse-unlock';
+const LOCK_HOURS = 12;
+
+async function hashPin(recId: string, pin: string): Promise<string> {
+    const data = new TextEncoder().encode(`tradehouse:${recId}:${pin}`);
+    const buf = await crypto.subtle.digest('SHA-256', data);
+    return Array.from(new Uint8Array(buf))
+        .map((b) => b.toString(16).padStart(2, '0'))
+        .join('');
+}
+function readUnlock(): string | null {
+    try {
+        const v = JSON.parse(window.localStorage.getItem(LOCK_KEY) || 'null') as {id?: string; until?: number} | null;
+        return v && v.id && v.until && v.until > Date.now() ? v.id : null;
+    } catch {
+        return null;
+    }
+}
+function writeUnlock(id: string | null): void {
+    try {
+        if (id) window.localStorage.setItem(LOCK_KEY, JSON.stringify({id, until: Date.now() + LOCK_HOURS * 3600000}));
+        else window.localStorage.removeItem(LOCK_KEY);
+    } catch {
+        return;
+    }
+}
+
+function BrandMark(): React.ReactElement {
+    return (
+        <svg width="72" height="72" viewBox="0 0 120 120" aria-hidden="true">
+            <rect width="120" height="120" rx="14" fill="#23292e" />
+            <polyline points="26,70 60,42 94,70" fill="none" stroke="#f5f3ee" strokeWidth="9" strokeLinecap="round" strokeLinejoin="round" />
+            <line x1="38" y1="88" x2="82" y2="88" stroke="#d8d3c8" strokeWidth="5" strokeLinecap="round" />
+        </svg>
+    );
+}
+
+function PinGate({
+    people,
+    staffT,
+    loginEmail,
+    onUnlock,
+}: {
+    people: AtRecord[];
+    staffT: Table;
+    loginEmail: string;
+    onUnlock: (id: string) => void;
+}): React.ReactElement {
+    const [who, setWho] = useState<AtRecord | null>(null);
+    const [pin, setPin] = useState('');
+    const [firstTry, setFirstTry] = useState('');
+    const [msg, setMsg] = useState('');
+    const [busy, setBusy] = useState(false);
+    const stored = who ? text(who, staffT, PIN_FIELD) : '';
+    const creating = !!who && !stored;
+    const isLogin = (r: AtRecord): number => (text(r, staffT, F.staffEmail).trim().toLowerCase() === loginEmail ? 1 : 0);
+    const sorted = [...people].sort((a, b) => isLogin(b) - isLogin(a));
+    const name = who ? text(who, staffT, F.staffName) : '';
+    const firstName = name.split(' ')[0] || name;
+    const back = (): void => {
+        setWho(null);
+        setPin('');
+        setFirstTry('');
+        setMsg('');
+    };
+
+    async function submit(full: string): Promise<void> {
+        if (!who) return;
+        setBusy(true);
+        try {
+            const h = await hashPin(who.id, full);
+            if (!creating) {
+                if (h === stored) {
+                    writeUnlock(who.id);
+                    onUnlock(who.id);
+                } else {
+                    setMsg('That PIN is not right. Try again.');
+                    setPin('');
+                }
+            } else if (!firstTry) {
+                setFirstTry(full);
+                setPin('');
+                setMsg('');
+            } else if (full !== firstTry) {
+                setMsg("Those two didn't match. Start again.");
+                setFirstTry('');
+                setPin('');
+            } else if (!staffT.hasPermissionToUpdateRecords([who])) {
+                setMsg("You can't save a PIN from this login. Ask the office.");
+                setFirstTry('');
+                setPin('');
+            } else {
+                await staffT.updateRecordAsync(who, {[PIN_FIELD]: h});
+                writeUnlock(who.id);
+                onUnlock(who.id);
+            }
+        } catch {
+            setMsg('Could not check your PIN. Check your signal and try again.');
+            setPin('');
+        } finally {
+            setBusy(false);
+        }
+    }
+    const press = (k: string): void => {
+        if (busy) return;
+        if (k === 'del') {
+            setPin(pin.slice(0, -1));
+            return;
+        }
+        const next = pin + k;
+        setPin(next);
+        if (next.length < 4) {
+            setMsg('');
+            return;
+        }
+        void submit(next);
+    };
+    const keys = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '', '0', 'del'];
+    const subtitle = creating
+        ? firstTry
+            ? 'Type the same PIN again to check'
+            : 'First time here. Make up a 4-digit PIN'
+        : 'Enter your 4-digit PIN';
+
+    return (
+        <div className="flex min-h-full flex-col items-stretch bg-[#F4F5F2] font-sans text-[#2A302D]">
+            <div className="mx-auto flex w-full max-w-md flex-col gap-6 px-6 pb-8 pt-6">
+                <div className="mt-3 flex flex-col items-center gap-2.5">
+                    <BrandMark />
+                    <span className="text-2xl font-bold tracking-tight text-[#1A1F1D]">Tradehouse HQ</span>
+                </div>
+                {!who ? (
+                    <>
+                        <div className="flex flex-col gap-1">
+                            <h1 className="text-[28px] font-bold leading-tight tracking-tight text-[#1A1F1D]">Who&apos;s signing in?</h1>
+                            <p className="text-[15px] text-[#4B5550]">Tap your name.</p>
+                        </div>
+                        {sorted.length === 0 && (
+                            <p className="text-[15px] text-[#4B5550]">
+                                Nobody can sign in to this page yet. Check the Staff table has people ticked as Active.
+                            </p>
+                        )}
+                        <ul className="flex flex-col gap-2.5">
+                            {sorted.map((p) => {
+                                const n = text(p, staffT, F.staffName);
+                                return (
+                                    <li key={p.id}>
+                                        <button
+                                            type="button"
+                                            onClick={() => {
+                                                setWho(p);
+                                                setPin('');
+                                                setFirstTry('');
+                                                setMsg('');
+                                            }}
+                                            className="flex min-h-[68px] w-full items-center gap-3.5 rounded-2xl border border-[#E6E9E6] bg-white py-2.5 pl-3 pr-4 text-left shadow-sm hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0F6B47]"
+                                        >
+                                            <Avatar name={n} id={p.id} size={44} />
+                                            <span className="flex min-w-0 flex-1 flex-col gap-0.5">
+                                                <span className="truncate text-[17px] font-semibold">{n}</span>
+                                                <span className="truncate text-sm text-[#4B5550]">{selectName(p, staffT, F.staffRole)}</span>
+                                            </span>
+                                            <CaretRightIcon size={18} className="flex-none text-[#7C857F]" />
+                                        </button>
+                                    </li>
+                                );
+                            })}
+                        </ul>
+                    </>
+                ) : (
+                    <>
+                        <div className="flex flex-col items-center gap-1.5 text-center">
+                            <h1 className="text-[28px] font-bold leading-tight text-[#1A1F1D]">Hi {firstName}</h1>
+                            <p className="text-[15px] text-[#4B5550]">{subtitle}</p>
+                        </div>
+                        <div className="flex justify-center gap-[18px]" aria-label={`${pin.length} of 4 digits entered`}>
+                            {[0, 1, 2, 3].map((n) => (
+                                <span
+                                    key={n}
+                                    className={`h-4 w-4 rounded-full border-2 border-[#0F6B47] ${n < pin.length ? 'bg-[#0F6B47]' : 'bg-transparent'}`}
+                                />
+                            ))}
+                        </div>
+                        {msg && (
+                            <p role="alert" className="text-center text-[15px] font-medium text-[#993029]">
+                                {msg}
+                            </p>
+                        )}
+                        <div className="grid grid-cols-[repeat(3,72px)] justify-center gap-x-7 gap-y-3.5">
+                            {keys.map((k, i) =>
+                                k === '' ? (
+                                    <span key={i} />
+                                ) : (
+                                    <button
+                                        key={i}
+                                        type="button"
+                                        disabled={busy}
+                                        aria-label={k === 'del' ? 'Delete' : k}
+                                        onClick={() => press(k)}
+                                        className="flex h-[72px] w-[72px] items-center justify-center rounded-full border border-[#E6E9E6] bg-white text-[26px] font-semibold text-[#2A302D] hover:bg-[#E3F0E8] disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0F6B47]"
+                                    >
+                                        {k === 'del' ? <BackspaceIcon size={24} /> : k}
+                                    </button>
+                                ),
+                            )}
+                        </div>
+                        <button type="button" onClick={back} className="mx-auto min-h-[44px] px-4 text-[15px] font-semibold text-[#0F6B47]">
+                            Not {firstName}?
+                        </button>
+                    </>
+                )}
+            </div>
+        </div>
+    );
+}
+
 function Avatar({name, id, size = 40}: {name: string; id: string; size?: number}): React.ReactElement {
     return (
         <span
@@ -164,10 +383,13 @@ function OfficeApp(): React.ReactElement {
     }, [toast]);
 
     const email = (session.currentUser?.email || '').trim().toLowerCase();
-    const me = useMemo(
-        () => staff.find((s) => text(s, staffT, F.staffEmail).trim().toLowerCase() === email) || null,
-        [staff, staffT, email],
-    );
+    const [unlockedId, setUnlockedId] = useState<string | null>(() => readUnlock());
+    const me = useMemo(() => staff.find((s) => s.id === unlockedId) || null, [staff, unlockedId]);
+    const signOut = (): void => {
+        writeUnlock(null);
+        setUnlockedId(null);
+        setSheet(false);
+    };
 
     if (!jobsT || !staffT || !bizT || !timeT || !invT) {
         return (
@@ -175,6 +397,18 @@ function OfficeApp(): React.ReactElement {
                 This page is missing one of its tables (Jobs, Staff, Businesses, Time entries or Invoices). Check the
                 element&apos;s settings in the properties panel.
             </div>
+        );
+    }
+
+    const isBoss = (r: AtRecord): boolean => /owner|admin/i.test(selectName(r, staffT, F.staffRole));
+    if (!me || !isBoss(me)) {
+        return (
+            <PinGate
+                people={staff.filter((s) => cell(s, staffT, F.staffActive) === true && isBoss(s))}
+                staffT={staffT}
+                loginEmail={email}
+                onUnlock={(id) => setUnlockedId(id)}
+            />
         );
     }
 
@@ -609,11 +843,9 @@ function OfficeApp(): React.ReactElement {
                         <span className="truncate">{biz ? shortBiz(biz.name) : 'All companies'}</span>
                         <CaretDownIcon size={16} className="flex-none text-[#7C857F]" />
                     </button>
-                    {me && (
-                        <span title={text(me, staffT, F.staffName)}>
-                            <Avatar name={text(me, staffT, F.staffName)} id={me.id} size={44} />
-                        </span>
-                    )}
+                    <span title={text(me, staffT, F.staffName)}>
+                        <Avatar name={text(me, staffT, F.staffName)} id={me.id} size={44} />
+                    </span>
                 </div>
                 {screen === 'overview' && Overview()}
                 {screen === 'allocate' && Allocate()}
@@ -661,6 +893,17 @@ function OfficeApp(): React.ReactElement {
                                 </button>
                             );
                         })}
+                        <div className="flex items-center gap-3 border-t border-[#E6E9E6] pt-3.5">
+                            <Avatar name={text(me, staffT, F.staffName)} id={me.id} />
+                            <span className="min-w-0 flex-1 truncate text-base font-semibold">{text(me, staffT, F.staffName)}</span>
+                            <button
+                                type="button"
+                                onClick={signOut}
+                                className="h-11 flex-none rounded-lg border border-[#C9CFCB] bg-white px-4 text-[15px] font-semibold text-[#2A302D] hover:bg-[#ECEFEB]"
+                            >
+                                Sign out
+                            </button>
+                        </div>
                     </div>
                 </div>
             )}
