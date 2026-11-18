@@ -71,7 +71,7 @@ const F = {
     timeNotes: 'fldu0uyET3wUt6s8W',
 };
 
-const AVATAR_COLORS = ['#0F6B47', '#6E4FB6', '#4F7CDB', '#C97A0C', '#2F3E46', '#993029'];
+const AVATAR_COLORS = ['#15803d', '#2f3e46', '#1f2a37', '#374151', '#23292e', '#9a5200'];
 
 type Link = {id: string; name: string};
 type Screen = 'today' | 'job' | 'clock' | 'intake';
@@ -126,6 +126,14 @@ function selectName(rec: AtRecord, table: Table | null, id: string): string {
 
 const PIN_FIELD = 'fld8IvcPnVwArQNNE';
 const LOCK_KEY = 'tradehouse-unlock';
+const FONT_ID = 'tc-manrope';
+if (typeof document !== 'undefined' && !document.getElementById(FONT_ID)) {
+    const l = document.createElement('link');
+    l.id = FONT_ID;
+    l.rel = 'stylesheet';
+    l.href = 'https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap';
+    document.head.appendChild(l);
+}
 const LOCK_HOURS = 12;
 
 async function hashPin(recId: string, pin: string): Promise<string> {
@@ -152,15 +160,6 @@ function writeUnlock(id: string | null): void {
     }
 }
 
-function BrandMark(): React.ReactElement {
-    return (
-        <svg width="72" height="72" viewBox="0 0 120 120" aria-hidden="true">
-            <rect width="120" height="120" rx="14" fill="#23292e" />
-            <polyline points="26,70 60,42 94,70" fill="none" stroke="#f5f3ee" strokeWidth="9" strokeLinecap="round" strokeLinejoin="round" />
-            <line x1="38" y1="88" x2="82" y2="88" stroke="#d8d3c8" strokeWidth="5" strokeLinecap="round" />
-        </svg>
-    );
-}
 
 function PinGate({
     people,
@@ -250,20 +249,20 @@ function PinGate({
         : 'Enter your 4-digit PIN';
 
     return (
-        <div className="flex min-h-full flex-col items-stretch bg-[#F4F5F2] font-sans text-[#2A302D]">
+        <div className="flex min-h-full flex-col items-stretch bg-[#f4f4f4] font-['Manrope',system-ui,sans-serif] text-[#23292e]">
             <div className="mx-auto flex w-full max-w-md flex-col gap-6 px-6 pb-8 pt-6">
-                <div className="mt-3 flex flex-col items-center gap-2.5">
-                    <BrandMark />
-                    <span className="text-2xl font-bold tracking-tight text-[#1A1F1D]">Tradehouse HQ</span>
+                <div className="mt-6 flex flex-col items-center gap-1">
+                    <span className="text-2xl font-extrabold tracking-tight text-[#23292e]">The Trade Collective</span>
+                    <span className="h-[3px] w-12 rounded-full bg-[#d8d3c8]" aria-hidden="true" />
                 </div>
                 {!who ? (
                     <>
                         <div className="flex flex-col gap-1">
-                            <h1 className="text-[28px] font-bold leading-tight tracking-tight text-[#1A1F1D]">Who&apos;s signing in?</h1>
-                            <p className="text-[15px] text-[#4B5550]">Tap your name.</p>
+                            <h1 className="text-[28px] font-bold leading-tight tracking-tight text-[#23292e]">Who&apos;s signing in?</h1>
+                            <p className="text-[15px] text-[#6b7280]">Tap your name.</p>
                         </div>
                         {sorted.length === 0 && (
-                            <p className="text-[15px] text-[#4B5550]">
+                            <p className="text-[15px] text-[#6b7280]">
                                 Nobody can sign in to this page yet. Check the Staff table has people ticked as Active.
                             </p>
                         )}
@@ -280,14 +279,14 @@ function PinGate({
                                                 setFirstTry('');
                                                 setMsg('');
                                             }}
-                                            className="flex min-h-[68px] w-full items-center gap-3.5 rounded-2xl border border-[#E6E9E6] bg-white py-2.5 pl-3 pr-4 text-left shadow-sm hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0F6B47]"
+                                            className="flex min-h-[68px] w-full items-center gap-3.5 rounded-2xl border border-[#e5e7eb] bg-white py-2.5 pl-3 pr-4 text-left shadow-sm hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#15803d]"
                                         >
                                             <Avatar name={n} id={p.id} size={44} />
                                             <span className="flex min-w-0 flex-1 flex-col gap-0.5">
                                                 <span className="truncate text-[17px] font-semibold">{n}</span>
-                                                <span className="truncate text-sm text-[#4B5550]">{selectName(p, staffT, F.staffRole)}</span>
+                                                <span className="truncate text-sm text-[#6b7280]">{selectName(p, staffT, F.staffRole)}</span>
                                             </span>
-                                            <CaretRightIcon size={18} className="flex-none text-[#7C857F]" />
+                                            <CaretRightIcon size={18} className="flex-none text-[#6b7280]" />
                                         </button>
                                     </li>
                                 );
@@ -297,19 +296,19 @@ function PinGate({
                 ) : (
                     <>
                         <div className="flex flex-col items-center gap-1.5 text-center">
-                            <h1 className="text-[28px] font-bold leading-tight text-[#1A1F1D]">Hi {firstName}</h1>
-                            <p className="text-[15px] text-[#4B5550]">{subtitle}</p>
+                            <h1 className="text-[28px] font-bold leading-tight text-[#23292e]">Hi {firstName}</h1>
+                            <p className="text-[15px] text-[#6b7280]">{subtitle}</p>
                         </div>
                         <div className="flex justify-center gap-[18px]" aria-label={`${pin.length} of 4 digits entered`}>
                             {[0, 1, 2, 3].map((n) => (
                                 <span
                                     key={n}
-                                    className={`h-4 w-4 rounded-full border-2 border-[#0F6B47] ${n < pin.length ? 'bg-[#0F6B47]' : 'bg-transparent'}`}
+                                    className={`h-4 w-4 rounded-full border-2 border-[#23292e] ${n < pin.length ? 'bg-[#23292e]' : 'bg-transparent'}`}
                                 />
                             ))}
                         </div>
                         {msg && (
-                            <p role="alert" className="text-center text-[15px] font-medium text-[#993029]">
+                            <p role="alert" className="text-center text-[15px] font-medium text-[#b42318]">
                                 {msg}
                             </p>
                         )}
@@ -324,14 +323,14 @@ function PinGate({
                                         disabled={busy}
                                         aria-label={k === 'del' ? 'Delete' : k}
                                         onClick={() => press(k)}
-                                        className="flex h-[72px] w-[72px] items-center justify-center rounded-full border border-[#E6E9E6] bg-white text-[26px] font-semibold text-[#2A302D] hover:bg-[#E3F0E8] disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0F6B47]"
+                                        className="flex h-[72px] w-[72px] items-center justify-center rounded-full border border-[#e5e7eb] bg-white text-[26px] font-semibold text-[#23292e] hover:bg-[#f4f4f4] disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#15803d]"
                                     >
                                         {k === 'del' ? <BackspaceIcon size={24} /> : k}
                                     </button>
                                 ),
                             )}
                         </div>
-                        <button type="button" onClick={back} className="mx-auto min-h-[44px] px-4 text-[15px] font-semibold text-[#0F6B47]">
+                        <button type="button" onClick={back} className="mx-auto min-h-[44px] px-4 text-[15px] font-semibold text-[#15803d]">
                             Not {firstName}?
                         </button>
                     </>
@@ -358,9 +357,9 @@ function Toast({message}: {message: string}): React.ReactElement | null {
     return (
         <div
             role="status"
-            className="fixed bottom-24 left-4 right-4 z-30 flex items-start gap-2 rounded-xl bg-[#1A1F1D] px-4 py-3 text-base text-white shadow-lg sm:left-auto sm:right-6 sm:max-w-sm"
+            className="fixed bottom-24 left-4 right-4 z-30 flex items-start gap-2 rounded-xl bg-[#23292e] px-4 py-3 text-base text-white shadow-lg sm:left-auto sm:right-6 sm:max-w-sm"
         >
-            <CheckCircleIcon size={20} weight="fill" className="mt-0.5 flex-none text-[#6CC270]" />
+            <CheckCircleIcon size={20} weight="fill" className="mt-0.5 flex-none text-[#22c55e]" />
             <span>{message}</span>
         </div>
     );
@@ -535,11 +534,11 @@ function CrewApp(): React.ReactElement {
             <button
                 type="button"
                 onClick={() => setSheet(true)}
-                className="flex min-h-[44px] min-w-0 max-w-[280px] items-center gap-2 rounded-full border border-[#C9CFCB] bg-white py-1 pl-3 pr-3 text-[15px] font-semibold text-[#2A302D] hover:bg-[#E3F0E8] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0F6B47]"
+                className="flex min-h-[44px] min-w-0 max-w-[280px] items-center gap-2 rounded-full border border-[#d1d5db] bg-white py-1 pl-3 pr-3 text-[15px] font-semibold text-[#23292e] hover:bg-[#f4f4f4] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#15803d]"
                 aria-label={`Working for ${biz ? biz.name : 'no company'}. Switch company`}
             >
                 <span className="truncate">{biz ? shortBiz(biz.name) : 'Pick a company'}</span>
-                <CaretDownIcon size={16} className="flex-none text-[#7C857F]" />
+                <CaretDownIcon size={16} className="flex-none text-[#6b7280]" />
             </button>
             <span title={meName}>
                 <Avatar name={meName} id={me.id} size={44} />
@@ -560,7 +559,7 @@ function CrewApp(): React.ReactElement {
     const urgentTag = (j: AtRecord): React.ReactElement | null => {
         const p = selectName(j, jobsT, F.jobPriority);
         return p === 'Urgent' || p === 'Emergency' ? (
-            <span className="rounded-full bg-[#FBE6E4] px-2 py-0.5 text-xs font-semibold text-[#993029]">{p}</span>
+            <span className="rounded-full bg-[#f4f4f4] px-2 py-0.5 text-xs font-semibold text-[#b42318]">{p}</span>
         ) : null;
     };
 
@@ -575,25 +574,25 @@ function CrewApp(): React.ReactElement {
                         setNoteDraft('');
                         setScreen('job');
                     }}
-                    className={`flex w-full flex-col gap-2 rounded-2xl border border-[#E6E9E6] bg-white p-4 text-left shadow-sm hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0F6B47] ${isDone(j) ? 'opacity-70' : ''}`}
+                    className={`flex w-full flex-col gap-2 rounded-2xl border border-[#e5e7eb] bg-white p-4 text-left shadow-sm hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#15803d] ${isDone(j) ? 'opacity-70' : ''}`}
                 >
                     <span className="flex w-full items-center justify-between gap-2">
-                        <span className="text-sm font-semibold tabular-nums text-[#4B5550]">
+                        <span className="text-sm font-semibold tabular-nums text-[#6b7280]">
                             #{text(j, jobsT, F.jobNumber)}
                             {d && d !== today ? ` · ${new Date(d + 'T00:00').toLocaleDateString('en-NZ', {weekday: 'short', day: 'numeric', month: 'short'})}` : ''}
                         </span>
                         <span className="min-w-0">{statusPill(j)}</span>
                     </span>
-                    <span className="text-lg font-semibold leading-snug text-[#2A302D]">
+                    <span className="text-lg font-semibold leading-snug text-[#23292e]">
                         {text(j, jobsT, F.jobTitle) || 'Untitled job'}
                     </span>
                     {text(j, jobsT, F.jobAddress) && (
-                        <span className="flex items-center gap-1.5 text-[15px] text-[#4B5550]">
+                        <span className="flex items-center gap-1.5 text-[15px] text-[#6b7280]">
                             <MapPinIcon size={16} className="flex-none" />
                             <span className="min-w-0 truncate">{text(j, jobsT, F.jobAddress)}</span>
                         </span>
                     )}
-                    <span className="flex w-full items-center gap-2 text-sm text-[#4B5550]">
+                    <span className="flex w-full items-center gap-2 text-sm text-[#6b7280]">
                         <span className="min-w-0 flex-1 truncate">{text(j, jobsT, F.jobClientName)}</span>
                         {urgentTag(j)}
                     </span>
@@ -607,15 +606,15 @@ function CrewApp(): React.ReactElement {
         return (
             <div className="flex flex-col gap-4 px-5 pb-6">
                 <div className="flex flex-col gap-1">
-                    <span className="text-xs font-bold uppercase tracking-[0.14em] text-[#0F6B47]">
+                    <span className="text-xs font-bold uppercase tracking-[0.14em] text-[#15803d]">
                         {new Date(now).toLocaleDateString('en-NZ', {weekday: 'long', day: 'numeric', month: 'long'})}
                     </span>
-                    <h1 className="text-[32px] font-bold leading-tight tracking-tight text-[#1A1F1D]">My jobs</h1>
+                    <h1 className="text-[32px] font-bold leading-tight tracking-tight text-[#23292e]">My jobs</h1>
                 </div>
                 <button
                     type="button"
                     onClick={() => setScreen('clock')}
-                    className={`flex min-h-[48px] items-center gap-2.5 rounded-xl border px-3.5 text-left text-[15px] font-semibold ${openEntry ? 'border-[#C9E4DA] bg-[#E3F0E8] text-[#0F6B47]' : 'border-[#C9CFCB] bg-white text-[#4B5550]'}`}
+                    className={`flex min-h-[48px] items-center gap-2.5 rounded-xl border px-3.5 text-left text-[15px] font-semibold ${openEntry ? 'border-[#22c55e] bg-[#f4f4f4] text-[#15803d]' : 'border-[#d1d5db] bg-white text-[#6b7280]'}`}
                 >
                     <span className="h-2 w-2 flex-none rounded-full bg-current" />
                     <span className="flex-1">{openEntry ? `On the clock · ${dur(now - openStart)}` : 'Off the clock. Tap to clock on.'}</span>
@@ -623,8 +622,8 @@ function CrewApp(): React.ReactElement {
                 </button>
                 {todayJobs.length === 0 ? (
                     <div className="flex flex-col items-center gap-2 px-4 py-10 text-center">
-                        <span className="text-lg font-semibold text-[#2A302D]">No jobs for you today</span>
-                        <span className="text-[15px] text-[#4B5550]">
+                        <span className="text-lg font-semibold text-[#23292e]">No jobs for you today</span>
+                        <span className="text-[15px] text-[#6b7280]">
                             Nothing allocated to you{biz ? ` for ${shortBiz(biz.name)}` : ''} today. Check the other company with the
                             switcher above.
                         </span>
@@ -632,8 +631,8 @@ function CrewApp(): React.ReactElement {
                 ) : (
                     <>
                         <div className="flex items-baseline justify-between">
-                            <h2 className="text-[17px] font-semibold text-[#2A302D]">Run sheet</h2>
-                            <span className="text-sm text-[#4B5550]">
+                            <h2 className="text-[17px] font-semibold text-[#23292e]">Run sheet</h2>
+                            <span className="text-sm text-[#6b7280]">
                                 {doneN} of {todayJobs.length} done
                             </span>
                         </div>
@@ -646,7 +645,7 @@ function CrewApp(): React.ReactElement {
                 )}
                 {upcoming.length > 0 && (
                     <>
-                        <h2 className="mt-4 text-[17px] font-semibold text-[#2A302D]">Coming up</h2>
+                        <h2 className="mt-4 text-[17px] font-semibold text-[#23292e]">Coming up</h2>
                         <ul className="flex flex-col gap-3">
                             {upcoming.map((j) => (
                                 <React.Fragment key={j.id}>{JobCard({j})}</React.Fragment>
@@ -663,7 +662,7 @@ function CrewApp(): React.ReactElement {
             return (
                 <div className="p-6 text-base">
                     This job is no longer on your list.{' '}
-                    <button type="button" className="font-semibold text-[#0F6B47] underline" onClick={() => setScreen('today')}>
+                    <button type="button" className="font-semibold text-[#15803d] underline" onClick={() => setScreen('today')}>
                         Back to today
                     </button>
                 </div>
@@ -719,33 +718,33 @@ function CrewApp(): React.ReactElement {
                         type="button"
                         aria-label="Back"
                         onClick={() => setScreen('today')}
-                        className="flex h-11 w-11 items-center justify-center rounded-lg text-[#2A302D] hover:bg-[#ECEFEB] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0F6B47]"
+                        className="flex h-11 w-11 items-center justify-center rounded-lg text-[#23292e] hover:bg-[#f4f4f4] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#15803d]"
                     >
                         <CaretLeftIcon size={24} />
                     </button>
-                    <span className="text-sm font-semibold tabular-nums text-[#4B5550]">#{text(job, jobsT, F.jobNumber)}</span>
+                    <span className="text-sm font-semibold tabular-nums text-[#6b7280]">#{text(job, jobsT, F.jobNumber)}</span>
                     <span className="flex-1" />
                     <span className="pr-3">{statusPill(job)}</span>
                 </div>
                 <div className="flex flex-col gap-4 px-5">
                     <div className="flex flex-col gap-1.5">
-                        <h1 className="text-[26px] font-bold leading-tight tracking-tight text-[#1A1F1D]">
+                        <h1 className="text-[26px] font-bold leading-tight tracking-tight text-[#23292e]">
                             {text(job, jobsT, F.jobTitle) || 'Untitled job'}
                         </h1>
-                        <span className="text-[15px] text-[#4B5550]">{text(job, jobsT, F.jobClientName)}</span>
+                        <span className="text-[15px] text-[#6b7280]">{text(job, jobsT, F.jobClientName)}</span>
                         <span className="self-start">{urgentTag(job)}</span>
                     </div>
 
-                    <div className="divide-y divide-[#E6E9E6] rounded-2xl border border-[#E6E9E6] bg-white">
+                    <div className="divide-y divide-[#e5e7eb] rounded-2xl border border-[#e5e7eb] bg-white">
                         <div className="flex items-center gap-3 py-3 pl-4 pr-3">
-                            <MapPinIcon size={20} className="flex-none text-[#7C857F]" />
-                            <span className="min-w-0 flex-1 text-base font-semibold text-[#2A302D]">{addr || 'No address yet'}</span>
+                            <MapPinIcon size={20} className="flex-none text-[#6b7280]" />
+                            <span className="min-w-0 flex-1 text-base font-semibold text-[#23292e]">{addr || 'No address yet'}</span>
                             {addr && (
                                 <a
                                     href={mapUrl(addr)}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="flex h-11 flex-none items-center gap-1.5 rounded-lg bg-[#E3F0E8] px-3.5 text-[15px] font-semibold text-[#0F6B47] no-underline"
+                                    className="flex h-11 flex-none items-center gap-1.5 rounded-lg bg-[#f4f4f4] px-3.5 text-[15px] font-semibold text-[#15803d] no-underline"
                                 >
                                     <NavigationArrowIcon size={16} />
                                     Go
@@ -754,15 +753,15 @@ function CrewApp(): React.ReactElement {
                         </div>
                         {(contact || phone) && (
                             <div className="flex items-center gap-3 py-3 pl-4 pr-3">
-                                <PhoneIcon size={20} className="flex-none text-[#7C857F]" />
+                                <PhoneIcon size={20} className="flex-none text-[#6b7280]" />
                                 <span className="flex min-w-0 flex-1 flex-col">
-                                    <span className="truncate text-base font-semibold text-[#2A302D]">{contact}</span>
-                                    <span className="text-sm text-[#4B5550]">{phone || 'No phone number'}</span>
+                                    <span className="truncate text-base font-semibold text-[#23292e]">{contact}</span>
+                                    <span className="text-sm text-[#6b7280]">{phone || 'No phone number'}</span>
                                 </span>
                                 {phone && (
                                     <a
                                         href={`tel:${phone.replace(/\s/g, '')}`}
-                                        className="flex h-11 flex-none items-center gap-1.5 rounded-lg bg-[#E3F0E8] px-3.5 text-[15px] font-semibold text-[#0F6B47] no-underline"
+                                        className="flex h-11 flex-none items-center gap-1.5 rounded-lg bg-[#f4f4f4] px-3.5 text-[15px] font-semibold text-[#15803d] no-underline"
                                     >
                                         <PhoneIcon size={16} />
                                         Call
@@ -777,7 +776,7 @@ function CrewApp(): React.ReactElement {
                             type="button"
                             disabled={busy}
                             onClick={start}
-                            className="flex h-14 items-center justify-center gap-2 rounded-xl bg-[#0F6B47] text-[17px] font-semibold text-white hover:bg-[#0A4F34] disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#0F6B47]"
+                            className="flex h-14 items-center justify-center gap-2 rounded-xl bg-[#22c55e] text-[17px] font-bold text-[#1a1a1a] hover:brightness-95 disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#15803d]"
                         >
                             <PlayIcon size={20} weight="fill" />
                             Start job
@@ -788,7 +787,7 @@ function CrewApp(): React.ReactElement {
                             type="button"
                             disabled={busy}
                             onClick={complete}
-                            className="flex h-14 items-center justify-center gap-2 rounded-xl bg-[#0F6B47] text-[17px] font-semibold text-white hover:bg-[#0A4F34] disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#0F6B47]"
+                            className="flex h-14 items-center justify-center gap-2 rounded-xl bg-[#22c55e] text-[17px] font-bold text-[#1a1a1a] hover:brightness-95 disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#15803d]"
                         >
                             <CheckIcon size={20} weight="bold" />
                             Mark complete
@@ -796,30 +795,30 @@ function CrewApp(): React.ReactElement {
                     )}
 
                     <section className="flex flex-col gap-2.5">
-                        <h2 className="text-[17px] font-semibold text-[#2A302D]">Work done summary</h2>
+                        <h2 className="text-[17px] font-semibold text-[#23292e]">Work done summary</h2>
                         {summary ? (
-                            <p className="whitespace-pre-wrap rounded-xl border border-[#E6E9E6] bg-white px-3.5 py-3 text-[15px] leading-relaxed text-[#2A302D]">
+                            <p className="whitespace-pre-wrap rounded-xl border border-[#e5e7eb] bg-white px-3.5 py-3 text-[15px] leading-relaxed text-[#23292e]">
                                 {summary}
                             </p>
                         ) : (
-                            <p className="text-sm text-[#4B5550]">Not written yet. It goes on the invoice and the client email.</p>
+                            <p className="text-sm text-[#6b7280]">Not written yet. It goes on the invoice and the client email.</p>
                         )}
-                        <h2 className="mt-2 text-[17px] font-semibold text-[#2A302D]">Notes</h2>
+                        <h2 className="mt-2 text-[17px] font-semibold text-[#23292e]">Notes</h2>
                         {notes && (
-                            <p className="whitespace-pre-wrap rounded-xl border border-[#E6E9E6] bg-white px-3.5 py-3 text-[15px] leading-relaxed text-[#2A302D]">
+                            <p className="whitespace-pre-wrap rounded-xl border border-[#e5e7eb] bg-white px-3.5 py-3 text-[15px] leading-relaxed text-[#23292e]">
                                 {notes}
                             </p>
                         )}
                         {canEdit && (
                             <>
-                                <label className="flex flex-col gap-1.5 text-sm font-semibold text-[#2A302D]">
+                                <label className="flex flex-col gap-1.5 text-sm font-semibold text-[#23292e]">
                                     Add to this job
                                     <textarea
                                         rows={3}
                                         value={noteDraft}
                                         onChange={(e) => setNoteDraft(e.target.value)}
                                         placeholder="What did you find? Parts used?"
-                                        className="resize-none rounded-xl border border-[#C9CFCB] bg-white px-3.5 py-3 text-base font-normal text-[#2A302D] outline-none focus:border-[#0F6B47] focus:ring-2 focus:ring-[#0F6B47]/25"
+                                        className="resize-none rounded-xl border border-[#d1d5db] bg-white px-3.5 py-3 text-base font-normal text-[#23292e] outline-none focus:border-[#15803d] focus:ring-2 focus:ring-[#15803d]/25"
                                     />
                                 </label>
                                 <div className="flex flex-wrap justify-end gap-2">
@@ -827,7 +826,7 @@ function CrewApp(): React.ReactElement {
                                         type="button"
                                         disabled={busy}
                                         onClick={() => saveNote('notes')}
-                                        className="h-11 rounded-lg border border-[#C9CFCB] bg-white px-4 text-[15px] font-semibold text-[#2A302D] hover:bg-[#E3F0E8] disabled:opacity-60"
+                                        className="h-11 rounded-lg border border-[#d1d5db] bg-white px-4 text-[15px] font-semibold text-[#23292e] hover:bg-[#f4f4f4] disabled:opacity-60"
                                     >
                                         Save as note
                                     </button>
@@ -835,7 +834,7 @@ function CrewApp(): React.ReactElement {
                                         type="button"
                                         disabled={busy}
                                         onClick={() => saveNote('summary')}
-                                        className="h-11 rounded-lg bg-[#2A302D] px-4 text-[15px] font-semibold text-white disabled:opacity-60"
+                                        className="h-11 rounded-lg bg-[#23292e] px-4 text-[15px] font-semibold text-white disabled:opacity-60"
                                     >
                                         Add to work done summary
                                     </button>
@@ -846,8 +845,8 @@ function CrewApp(): React.ReactElement {
 
                     <section className="flex flex-col gap-2.5">
                         <div className="flex items-baseline justify-between">
-                            <h2 className="text-[17px] font-semibold text-[#2A302D]">Photos</h2>
-                            <span className="text-sm text-[#4B5550]">
+                            <h2 className="text-[17px] font-semibold text-[#23292e]">Photos</h2>
+                            <span className="text-sm text-[#6b7280]">
                                 {before} before · {after} after
                             </span>
                         </div>
@@ -855,7 +854,7 @@ function CrewApp(): React.ReactElement {
                             <button
                                 type="button"
                                 onClick={() => expandRecord(job)}
-                                className="flex min-h-[56px] items-center justify-center gap-2 rounded-xl border-[1.5px] border-dashed border-[#C9CFCB] bg-white text-[15px] font-semibold text-[#0F6B47] hover:bg-[#E3F0E8]"
+                                className="flex min-h-[56px] items-center justify-center gap-2 rounded-xl border-[1.5px] border-dashed border-[#d1d5db] bg-white text-[15px] font-semibold text-[#15803d] hover:bg-[#f4f4f4]"
                             >
                                 <CameraIcon size={22} />
                                 Add before or after photos
@@ -870,46 +869,46 @@ function CrewApp(): React.ReactElement {
     function ClockScreen(): React.ReactElement {
         return (
             <div className="flex flex-col gap-4 px-5 pb-6">
-                <h1 className="text-[32px] font-bold leading-tight tracking-tight text-[#1A1F1D]">Timesheet</h1>
-                <div className="flex flex-col items-center gap-2.5 rounded-[20px] bg-[#1A1F1D] px-5 py-6 text-center text-white">
-                    <span className={`text-xs font-bold uppercase tracking-[0.14em] ${openEntry ? 'text-[#6CC270]' : 'text-[#C9CFCB]'}`}>
+                <h1 className="text-[32px] font-bold leading-tight tracking-tight text-[#23292e]">Timesheet</h1>
+                <div className="flex flex-col items-center gap-2.5 rounded-[20px] bg-[#23292e] px-5 py-6 text-center text-white">
+                    <span className={`text-xs font-bold uppercase tracking-[0.14em] ${openEntry ? 'text-[#22c55e]' : 'text-[#d1d5db]'}`}>
                         {openEntry ? 'On the clock' : 'Off the clock'}
                     </span>
                     <span className="text-[56px] font-bold leading-none tabular-nums tracking-tight">
                         {clockTxt(openEntry ? now - openStart : 0)}
                     </span>
-                    {biz && <span className="text-sm text-[#C9CFCB]">Working for {shortBiz(biz.name)}</span>}
+                    {biz && <span className="text-sm text-[#d1d5db]">Working for {shortBiz(biz.name)}</span>}
                     <button
                         type="button"
                         disabled={busy || !timeT.hasPermissionToCreateRecords()}
                         onClick={toggleClock}
-                        className={`mt-2 h-[60px] w-full rounded-xl text-lg font-bold text-[#1A1F1D] disabled:opacity-60 ${openEntry ? 'bg-white' : 'bg-[#6CC270]'}`}
+                        className={`mt-2 h-[60px] w-full rounded-xl text-lg font-bold text-[#23292e] disabled:opacity-60 ${openEntry ? 'bg-white' : 'bg-[#22c55e]'}`}
                     >
                         {openEntry ? 'Clock off' : 'Clock on'}
                     </button>
                 </div>
                 {todayEntries.length > 0 && (
                     <section className="flex flex-col gap-2.5">
-                        <h2 className="text-[17px] font-semibold text-[#2A302D]">Today</h2>
-                        <ul className="divide-y divide-[#E6E9E6] overflow-hidden rounded-2xl border border-[#E6E9E6] bg-white">
+                        <h2 className="text-[17px] font-semibold text-[#23292e]">Today</h2>
+                        <ul className="divide-y divide-[#e5e7eb] overflow-hidden rounded-2xl border border-[#e5e7eb] bg-white">
                             {todayEntries.map((t) => {
                                 const s = cell(t, timeT, F.timeStart) as string | null;
                                 const e = cell(t, timeT, F.timeEnd) as string | null;
                                 return (
                                     <li key={t.id} className="flex min-h-[48px] items-center gap-3.5 px-4">
-                                        <span className="text-sm font-semibold tabular-nums text-[#4B5550]">
+                                        <span className="text-sm font-semibold tabular-nums text-[#6b7280]">
                                             {s ? hm(new Date(s)) : '--:--'} – {e ? hm(new Date(e)) : 'now'}
                                         </span>
-                                        <span className="min-w-0 flex-1 truncate text-[15px] text-[#2A302D]">{text(t, timeT, F.timeNotes)}</span>
+                                        <span className="min-w-0 flex-1 truncate text-[15px] text-[#23292e]">{text(t, timeT, F.timeNotes)}</span>
                                     </li>
                                 );
                             })}
                         </ul>
                     </section>
                 )}
-                <div className="flex items-center justify-between rounded-2xl border border-[#E6E9E6] bg-white px-4 py-3.5">
-                    <span className="text-[15px] font-semibold text-[#2A302D]">Last 7 days</span>
-                    <span className="text-xl font-bold tabular-nums text-[#1A1F1D]">{Math.round(weekHours * 10) / 10} h</span>
+                <div className="flex items-center justify-between rounded-2xl border border-[#e5e7eb] bg-white px-4 py-3.5">
+                    <span className="text-[15px] font-semibold text-[#23292e]">Last 7 days</span>
+                    <span className="text-xl font-bold tabular-nums text-[#23292e]">{Math.round(weekHours * 10) / 10} h</span>
                 </div>
             </div>
         );
@@ -946,33 +945,33 @@ function CrewApp(): React.ReactElement {
             }, `Job added${biz ? ` for ${shortBiz(biz.name)}` : ''}. It's on your run sheet.`);
         };
         const input =
-            'h-12 rounded-xl border border-[#C9CFCB] bg-white px-3.5 text-base font-normal text-[#2A302D] outline-none focus:border-[#0F6B47] focus:ring-2 focus:ring-[#0F6B47]/25';
+            'h-12 rounded-xl border border-[#d1d5db] bg-white px-3.5 text-base font-normal text-[#23292e] outline-none focus:border-[#15803d] focus:ring-2 focus:ring-[#15803d]/25';
         return (
             <div className="flex flex-col gap-4 px-5 pb-8">
                 <div className="flex flex-col gap-1">
-                    <h1 className="text-[32px] font-bold leading-tight tracking-tight text-[#1A1F1D]">New job</h1>
-                    <p className="text-[15px] text-[#4B5550]">
+                    <h1 className="text-[32px] font-bold leading-tight tracking-tight text-[#23292e]">New job</h1>
+                    <p className="text-[15px] text-[#6b7280]">
                         {biz ? `For ${shortBiz(biz.name)}. ` : ''}It goes on your run sheet for today and the office sees it.
                     </p>
                 </div>
-                <label className="flex flex-col gap-1.5 text-sm font-semibold text-[#2A302D]">
+                <label className="flex flex-col gap-1.5 text-sm font-semibold text-[#23292e]">
                     What&apos;s the job?
                     <input className={input} value={intake.title} onChange={(e) => setIntake({...intake, title: e.target.value})} placeholder="e.g. Leaking tap upstairs" />
                 </label>
-                <label className="flex flex-col gap-1.5 text-sm font-semibold text-[#2A302D]">
+                <label className="flex flex-col gap-1.5 text-sm font-semibold text-[#23292e]">
                     Address
                     <input className={input} value={intake.address} onChange={(e) => setIntake({...intake, address: e.target.value})} placeholder="Street, suburb, city" />
                 </label>
-                <label className="flex flex-col gap-1.5 text-sm font-semibold text-[#2A302D]">
+                <label className="flex flex-col gap-1.5 text-sm font-semibold text-[#23292e]">
                     Customer
                     <input className={input} value={intake.customer} onChange={(e) => setIntake({...intake, customer: e.target.value})} placeholder="Name or company" />
                 </label>
-                <label className="flex flex-col gap-1.5 text-sm font-semibold text-[#2A302D]">
+                <label className="flex flex-col gap-1.5 text-sm font-semibold text-[#23292e]">
                     Phone
                     <input className={input} inputMode="tel" value={intake.phone} onChange={(e) => setIntake({...intake, phone: e.target.value})} placeholder="021 000 000" />
                 </label>
                 <fieldset className="flex flex-col gap-2">
-                    <legend className="mb-2 text-sm font-semibold text-[#2A302D]">Priority</legend>
+                    <legend className="mb-2 text-sm font-semibold text-[#23292e]">Priority</legend>
                     <div className="flex gap-2">
                         {[false, true].map((u) => (
                             <button
@@ -980,7 +979,7 @@ function CrewApp(): React.ReactElement {
                                 type="button"
                                 aria-pressed={intake.urgent === u}
                                 onClick={() => setIntake({...intake, urgent: u})}
-                                className={`min-h-[44px] flex-1 rounded-xl border text-[15px] font-semibold ${intake.urgent === u ? 'border-[#0F6B47] bg-[#0F6B47] text-white' : 'border-[#C9CFCB] bg-white text-[#2A302D]'}`}
+                                className={`min-h-[44px] flex-1 rounded-xl border text-[15px] font-semibold ${intake.urgent === u ? 'border-[#23292e] bg-[#23292e] text-white' : 'border-[#d1d5db] bg-white text-[#23292e]'}`}
                             >
                                 {u ? 'Urgent' : 'Normal'}
                             </button>
@@ -988,7 +987,7 @@ function CrewApp(): React.ReactElement {
                     </div>
                 </fieldset>
                 {intakeErr && (
-                    <div role="alert" className="rounded-xl bg-[#FBE6E4] px-3.5 py-3 text-sm font-medium text-[#993029]">
+                    <div role="alert" className="rounded-xl bg-[#f4f4f4] px-3.5 py-3 text-sm font-medium text-[#b42318]">
                         {intakeErr}
                     </div>
                 )}
@@ -996,7 +995,7 @@ function CrewApp(): React.ReactElement {
                     type="button"
                     disabled={busy || !canCreate}
                     onClick={save}
-                    className="h-14 rounded-xl bg-[#0F6B47] text-[17px] font-semibold text-white hover:bg-[#0A4F34] disabled:opacity-60"
+                    className="h-14 rounded-xl bg-[#22c55e] text-[17px] font-bold text-[#1a1a1a] hover:brightness-95 disabled:opacity-60"
                 >
                     Save job
                 </button>
@@ -1005,7 +1004,7 @@ function CrewApp(): React.ReactElement {
     }
 
     return (
-        <div className="relative flex h-full min-h-full flex-col bg-[#F4F5F2] font-sans text-[#2A302D]">
+        <div className="relative flex h-full min-h-full flex-col bg-[#f4f4f4] font-['Manrope',system-ui,sans-serif] text-[#23292e]">
             <main className="mx-auto w-full max-w-xl flex-1 overflow-y-auto pb-24" tabIndex={0}>
                 {screen !== 'job' && topBar}
                 {screen === 'today' && TodayScreen()}
@@ -1015,7 +1014,7 @@ function CrewApp(): React.ReactElement {
             </main>
             <nav
                 aria-label="Crew app"
-                className="fixed bottom-0 left-0 right-0 z-20 flex justify-around border-t border-[#E6E9E6] bg-white/90 px-2 pb-5 pt-1.5 backdrop-blur"
+                className="fixed bottom-0 left-0 right-0 z-20 flex justify-around border-t border-[#e5e7eb] bg-white/90 px-2 pb-5 pt-1.5 backdrop-blur"
             >
                 {tabs.map(([k, label, icon]) => {
                     const on = screen === k || (screen === 'job' && k === 'today');
@@ -1025,7 +1024,7 @@ function CrewApp(): React.ReactElement {
                             type="button"
                             aria-current={on ? 'page' : undefined}
                             onClick={() => setScreen(k)}
-                            className={`flex min-h-[52px] max-w-[160px] flex-1 flex-col items-center justify-center gap-0.5 text-xs font-semibold ${on ? 'text-[#0F6B47]' : 'text-[#4B5550]'}`}
+                            className={`flex min-h-[52px] max-w-[160px] flex-1 flex-col items-center justify-center gap-0.5 text-xs font-semibold ${on ? 'text-[#15803d]' : 'text-[#6b7280]'}`}
                         >
                             {icon}
                             {label}
@@ -1035,10 +1034,10 @@ function CrewApp(): React.ReactElement {
             </nav>
             {sheet && (
                 <div className="fixed inset-0 z-40 flex flex-col justify-end" role="dialog" aria-modal="true" aria-label="Switch company">
-                    <button type="button" aria-label="Close" className="absolute inset-0 bg-[#1A1F1D]/40" onClick={() => setSheet(false)} />
+                    <button type="button" aria-label="Close" className="absolute inset-0 bg-[#23292e]/40" onClick={() => setSheet(false)} />
                     <div className="relative mx-auto flex w-full max-w-xl flex-col gap-3.5 rounded-t-[20px] bg-white px-5 pb-9 pt-2.5 shadow-lg">
-                        <span aria-hidden="true" className="mx-auto h-1.5 w-10 rounded-full bg-[#C9CFCB]" />
-                        <span className="text-xs font-bold uppercase tracking-[0.14em] text-[#0F6B47]">Working for</span>
+                        <span aria-hidden="true" className="mx-auto h-1.5 w-10 rounded-full bg-[#d1d5db]" />
+                        <span className="text-xs font-bold uppercase tracking-[0.14em] text-[#15803d]">Working for</span>
                         <div className="flex flex-col gap-2">
                             {bizList.map((b) => {
                                 const sel = b.id === bizId;
@@ -1063,27 +1062,27 @@ function CrewApp(): React.ReactElement {
                                             }
                                             if (!sel) setToast(`Now working for ${shortBiz(b.name)}.`);
                                         }}
-                                        className={`flex min-h-[60px] items-center gap-3 rounded-2xl border px-3.5 py-2 text-left ${sel ? 'border-[#0F6B47] bg-[#E3F0E8]' : 'border-[#E6E9E6] bg-white'}`}
+                                        className={`flex min-h-[60px] items-center gap-3 rounded-2xl border px-3.5 py-2 text-left ${sel ? 'border-[#15803d] bg-[#f4f4f4]' : 'border-[#e5e7eb] bg-white'}`}
                                     >
                                         <span className="flex min-w-0 flex-1 flex-col">
-                                            <span className="truncate text-base font-semibold text-[#2A302D]">{b.name}</span>
-                                            <span className="text-sm text-[#4B5550]">{count === 1 ? '1 open job' : `${count} open jobs`}</span>
+                                            <span className="truncate text-base font-semibold text-[#23292e]">{b.name}</span>
+                                            <span className="text-sm text-[#6b7280]">{count === 1 ? '1 open job' : `${count} open jobs`}</span>
                                         </span>
-                                        {sel && <CheckIcon size={20} weight="bold" className="text-[#0F6B47]" />}
+                                        {sel && <CheckIcon size={20} weight="bold" className="text-[#15803d]" />}
                                     </button>
                                 );
                             })}
                         </div>
-                        <div className="flex items-center gap-3 border-t border-[#E6E9E6] pt-3.5">
+                        <div className="flex items-center gap-3 border-t border-[#e5e7eb] pt-3.5">
                             <Avatar name={meName} id={me.id} />
                             <span className="flex min-w-0 flex-1 flex-col">
                                 <span className="truncate text-base font-semibold">{meName}</span>
-                                <span className="text-sm text-[#4B5550]">{selectName(me, staffT, F.staffRole)}</span>
+                                <span className="text-sm text-[#6b7280]">{selectName(me, staffT, F.staffRole)}</span>
                             </span>
                             <button
                                 type="button"
                                 onClick={signOut}
-                                className="h-11 flex-none rounded-lg border border-[#C9CFCB] bg-white px-4 text-[15px] font-semibold text-[#2A302D] hover:bg-[#ECEFEB]"
+                                className="h-11 flex-none rounded-lg border border-[#d1d5db] bg-white px-4 text-[15px] font-semibold text-[#23292e] hover:bg-[#f4f4f4]"
                             >
                                 Sign out
                             </button>

@@ -1,6 +1,6 @@
-# Tradehouse HQ inside Airtable
+# The Trade Collective app inside Airtable
 
-These two files are the code behind the two custom pages in the **Tradehouse HQ** Airtable base.
+These two files are the code behind the two custom pages in the **Tradehouse HQ** Airtable base (The Trade Collective).
 They are a backup copy. The live versions are stored in Airtable itself.
 
 | File | Airtable page | Who uses it |

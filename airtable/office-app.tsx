@@ -65,7 +65,7 @@ const F = {
     invBiz: 'fldDzClz3TG5Ff2Em',
 };
 
-const AVATAR_COLORS = ['#0F6B47', '#6E4FB6', '#4F7CDB', '#C97A0C', '#2F3E46', '#993029'];
+const AVATAR_COLORS = ['#15803d', '#2f3e46', '#1f2a37', '#374151', '#23292e', '#9a5200'];
 const ALL = 'all';
 
 type Link = {id: string; name: string};
@@ -121,6 +121,14 @@ function selectName(rec: AtRecord, table: Table | null, id: string): string {
 
 const PIN_FIELD = 'fld8IvcPnVwArQNNE';
 const LOCK_KEY = 'tradehouse-unlock';
+const FONT_ID = 'tc-manrope';
+if (typeof document !== 'undefined' && !document.getElementById(FONT_ID)) {
+    const l = document.createElement('link');
+    l.id = FONT_ID;
+    l.rel = 'stylesheet';
+    l.href = 'https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap';
+    document.head.appendChild(l);
+}
 const LOCK_HOURS = 12;
 
 async function hashPin(recId: string, pin: string): Promise<string> {
@@ -147,15 +155,6 @@ function writeUnlock(id: string | null): void {
     }
 }
 
-function BrandMark(): React.ReactElement {
-    return (
-        <svg width="72" height="72" viewBox="0 0 120 120" aria-hidden="true">
-            <rect width="120" height="120" rx="14" fill="#23292e" />
-            <polyline points="26,70 60,42 94,70" fill="none" stroke="#f5f3ee" strokeWidth="9" strokeLinecap="round" strokeLinejoin="round" />
-            <line x1="38" y1="88" x2="82" y2="88" stroke="#d8d3c8" strokeWidth="5" strokeLinecap="round" />
-        </svg>
-    );
-}
 
 function PinGate({
     people,
@@ -245,20 +244,20 @@ function PinGate({
         : 'Enter your 4-digit PIN';
 
     return (
-        <div className="flex min-h-full flex-col items-stretch bg-[#F4F5F2] font-sans text-[#2A302D]">
+        <div className="flex min-h-full flex-col items-stretch bg-[#f4f4f4] font-['Manrope',system-ui,sans-serif] text-[#23292e]">
             <div className="mx-auto flex w-full max-w-md flex-col gap-6 px-6 pb-8 pt-6">
-                <div className="mt-3 flex flex-col items-center gap-2.5">
-                    <BrandMark />
-                    <span className="text-2xl font-bold tracking-tight text-[#1A1F1D]">Tradehouse HQ</span>
+                <div className="mt-6 flex flex-col items-center gap-1">
+                    <span className="text-2xl font-extrabold tracking-tight text-[#23292e]">The Trade Collective</span>
+                    <span className="h-[3px] w-12 rounded-full bg-[#d8d3c8]" aria-hidden="true" />
                 </div>
                 {!who ? (
                     <>
                         <div className="flex flex-col gap-1">
-                            <h1 className="text-[28px] font-bold leading-tight tracking-tight text-[#1A1F1D]">Who&apos;s signing in?</h1>
-                            <p className="text-[15px] text-[#4B5550]">Tap your name.</p>
+                            <h1 className="text-[28px] font-bold leading-tight tracking-tight text-[#23292e]">Who&apos;s signing in?</h1>
+                            <p className="text-[15px] text-[#6b7280]">Tap your name.</p>
                         </div>
                         {sorted.length === 0 && (
-                            <p className="text-[15px] text-[#4B5550]">
+                            <p className="text-[15px] text-[#6b7280]">
                                 Nobody can sign in to this page yet. Check the Staff table has people ticked as Active.
                             </p>
                         )}
@@ -275,14 +274,14 @@ function PinGate({
                                                 setFirstTry('');
                                                 setMsg('');
                                             }}
-                                            className="flex min-h-[68px] w-full items-center gap-3.5 rounded-2xl border border-[#E6E9E6] bg-white py-2.5 pl-3 pr-4 text-left shadow-sm hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0F6B47]"
+                                            className="flex min-h-[68px] w-full items-center gap-3.5 rounded-2xl border border-[#e5e7eb] bg-white py-2.5 pl-3 pr-4 text-left shadow-sm hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#15803d]"
                                         >
                                             <Avatar name={n} id={p.id} size={44} />
                                             <span className="flex min-w-0 flex-1 flex-col gap-0.5">
                                                 <span className="truncate text-[17px] font-semibold">{n}</span>
-                                                <span className="truncate text-sm text-[#4B5550]">{selectName(p, staffT, F.staffRole)}</span>
+                                                <span className="truncate text-sm text-[#6b7280]">{selectName(p, staffT, F.staffRole)}</span>
                                             </span>
-                                            <CaretRightIcon size={18} className="flex-none text-[#7C857F]" />
+                                            <CaretRightIcon size={18} className="flex-none text-[#6b7280]" />
                                         </button>
                                     </li>
                                 );
@@ -292,19 +291,19 @@ function PinGate({
                 ) : (
                     <>
                         <div className="flex flex-col items-center gap-1.5 text-center">
-                            <h1 className="text-[28px] font-bold leading-tight text-[#1A1F1D]">Hi {firstName}</h1>
-                            <p className="text-[15px] text-[#4B5550]">{subtitle}</p>
+                            <h1 className="text-[28px] font-bold leading-tight text-[#23292e]">Hi {firstName}</h1>
+                            <p className="text-[15px] text-[#6b7280]">{subtitle}</p>
                         </div>
                         <div className="flex justify-center gap-[18px]" aria-label={`${pin.length} of 4 digits entered`}>
                             {[0, 1, 2, 3].map((n) => (
                                 <span
                                     key={n}
-                                    className={`h-4 w-4 rounded-full border-2 border-[#0F6B47] ${n < pin.length ? 'bg-[#0F6B47]' : 'bg-transparent'}`}
+                                    className={`h-4 w-4 rounded-full border-2 border-[#23292e] ${n < pin.length ? 'bg-[#23292e]' : 'bg-transparent'}`}
                                 />
                             ))}
                         </div>
                         {msg && (
-                            <p role="alert" className="text-center text-[15px] font-medium text-[#993029]">
+                            <p role="alert" className="text-center text-[15px] font-medium text-[#b42318]">
                                 {msg}
                             </p>
                         )}
@@ -319,14 +318,14 @@ function PinGate({
                                         disabled={busy}
                                         aria-label={k === 'del' ? 'Delete' : k}
                                         onClick={() => press(k)}
-                                        className="flex h-[72px] w-[72px] items-center justify-center rounded-full border border-[#E6E9E6] bg-white text-[26px] font-semibold text-[#2A302D] hover:bg-[#E3F0E8] disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0F6B47]"
+                                        className="flex h-[72px] w-[72px] items-center justify-center rounded-full border border-[#e5e7eb] bg-white text-[26px] font-semibold text-[#23292e] hover:bg-[#f4f4f4] disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#15803d]"
                                     >
                                         {k === 'del' ? <BackspaceIcon size={24} /> : k}
                                     </button>
                                 ),
                             )}
                         </div>
-                        <button type="button" onClick={back} className="mx-auto min-h-[44px] px-4 text-[15px] font-semibold text-[#0F6B47]">
+                        <button type="button" onClick={back} className="mx-auto min-h-[44px] px-4 text-[15px] font-semibold text-[#15803d]">
                             Not {firstName}?
                         </button>
                     </>
@@ -467,10 +466,10 @@ function OfficeApp(): React.ReactElement {
         if (t.hasPermissionToExpandRecords()) expandRecord(r);
     };
 
-    const h1 = 'text-[32px] font-bold leading-tight tracking-tight text-[#1A1F1D]';
-    const h2 = 'text-[17px] font-semibold text-[#2A302D]';
+    const h1 = 'text-[32px] font-bold leading-tight tracking-tight text-[#23292e]';
+    const h2 = 'text-[17px] font-semibold text-[#23292e]';
     const chip = (on: boolean): string =>
-        `flex-none min-h-[44px] rounded-full border px-4 text-sm font-semibold whitespace-nowrap ${on ? 'border-[#0F6B47] bg-[#0F6B47] text-white' : 'border-[#C9CFCB] bg-white text-[#2A302D]'}`;
+        `flex-none min-h-[44px] rounded-full border px-4 text-sm font-semibold whitespace-nowrap ${on ? 'border-[#23292e] bg-[#23292e] text-white' : 'border-[#d1d5db] bg-white text-[#23292e]'}`;
 
     function Overview(): React.ReactElement {
         const invoicedMonth = coInv
@@ -483,25 +482,25 @@ function OfficeApp(): React.ReactElement {
         const todayDone = todays.filter((j) => ['Completed', 'Invoiced', 'Paid'].includes(st(j))).length;
         const onClock = times.filter((t) => text(t, timeT!, F.timeStart) !== '' && text(t, timeT!, F.timeEnd) === '');
         const kpis = [
-            {label: 'Invoiced this month', value: money(invoicedMonth), color: 'text-[#1A1F1D]', sub: ''},
-            {label: 'Still owed', value: money(owed), color: 'text-[#1A1F1D]', sub: `${unpaid.length + overdue.length} invoices`},
-            {label: 'Overdue', value: money(overdueSum), color: 'text-[#C2453B]', sub: overdue.length === 1 ? '1 invoice' : `${overdue.length} invoices`},
-            {label: 'Ready to invoice', value: money(readySum), color: 'text-[#1F8A4C]', sub: readyJobs.length === 1 ? '1 completed job' : `${readyJobs.length} completed jobs`},
+            {label: 'Invoiced this month', value: money(invoicedMonth), color: 'text-[#23292e]', sub: ''},
+            {label: 'Still owed', value: money(owed), color: 'text-[#23292e]', sub: `${unpaid.length + overdue.length} invoices`},
+            {label: 'Overdue', value: money(overdueSum), color: 'text-[#b42318]', sub: overdue.length === 1 ? '1 invoice' : `${overdue.length} invoices`},
+            {label: 'Ready to invoice', value: money(readySum), color: 'text-[#15803d]', sub: readyJobs.length === 1 ? '1 completed job' : `${readyJobs.length} completed jobs`},
         ];
         return (
             <div className="flex flex-col gap-4 px-5 pb-6">
                 <div className="flex flex-col gap-1">
-                    <span className="text-xs font-bold uppercase tracking-[0.14em] text-[#0F6B47]">
+                    <span className="text-xs font-bold uppercase tracking-[0.14em] text-[#15803d]">
                         {new Date(now).toLocaleDateString('en-NZ', {month: 'long', year: 'numeric'})}
                     </span>
                     <h1 className={h1}>Overview</h1>
                 </div>
                 <div className="grid grid-cols-2 gap-2.5 lg:grid-cols-4">
                     {kpis.map((k) => (
-                        <div key={k.label} className="flex flex-col gap-1 rounded-2xl border border-[#E6E9E6] bg-white p-3.5">
-                            <span className="text-sm font-medium text-[#4B5550]">{k.label}</span>
+                        <div key={k.label} className="flex flex-col gap-1 rounded-2xl border border-[#e5e7eb] bg-white p-3.5">
+                            <span className="text-sm font-medium text-[#6b7280]">{k.label}</span>
                             <span className={`text-2xl font-bold tabular-nums ${k.color}`}>{k.value}</span>
-                            {k.sub && <span className="text-sm text-[#4B5550]">{k.sub}</span>}
+                            {k.sub && <span className="text-sm text-[#6b7280]">{k.sub}</span>}
                         </div>
                     ))}
                 </div>
@@ -512,16 +511,16 @@ function OfficeApp(): React.ReactElement {
                             setInvTab('overdue');
                             setScreen('invoices');
                         }}
-                        className="flex min-h-[48px] items-center justify-center gap-2 rounded-xl border border-[#C9CFCB] bg-white text-[15px] font-semibold text-[#2A302D] hover:bg-[#E3F0E8]"
+                        className="flex min-h-[48px] items-center justify-center gap-2 rounded-xl border border-[#d1d5db] bg-white text-[15px] font-semibold text-[#23292e] hover:bg-[#f4f4f4]"
                     >
                         <ReceiptIcon size={18} />
                         See overdue invoices
                     </button>
                 )}
                 {unassigned.length > 0 && (
-                    <div className="flex items-center gap-3 rounded-2xl bg-[#FBEFD9] p-4">
-                        <WarningIcon size={20} weight="fill" className="flex-none text-[#9A5C06]" />
-                        <span className="flex-1 text-[15px] font-semibold text-[#2A302D]">
+                    <div className="flex items-center gap-3 rounded-2xl bg-[#f4f4f4] p-4">
+                        <WarningIcon size={20} weight="fill" className="flex-none text-[#9a5200]" />
+                        <span className="flex-1 text-[15px] font-semibold text-[#23292e]">
                             {unassigned.length === 1 ? '1 job needs allocating' : `${unassigned.length} jobs need allocating`}
                         </span>
                         <button
@@ -530,7 +529,7 @@ function OfficeApp(): React.ReactElement {
                                 setFilter('unassigned');
                                 setScreen('allocate');
                             }}
-                            className="h-11 rounded-lg bg-[#2A302D] px-4 text-[15px] font-semibold text-white"
+                            className="h-11 rounded-lg bg-[#23292e] px-4 text-[15px] font-semibold text-white"
                         >
                             Allocate
                         </button>
@@ -539,17 +538,17 @@ function OfficeApp(): React.ReactElement {
                 <section className="flex flex-col gap-2.5">
                     <h2 className={h2}>Today</h2>
                     <div className="grid grid-cols-2 gap-2.5 text-[15px] font-semibold">
-                        <div className="rounded-2xl border border-[#E6E9E6] bg-white p-3.5">
+                        <div className="rounded-2xl border border-[#e5e7eb] bg-white p-3.5">
                             {todayDone} of {todays.length} jobs done
                         </div>
-                        <div className="rounded-2xl border border-[#E6E9E6] bg-white p-3.5">
+                        <div className="rounded-2xl border border-[#e5e7eb] bg-white p-3.5">
                             {onClock.length} on the clock
                         </div>
                     </div>
                 </section>
                 <section className="flex flex-col gap-2.5">
                     <h2 className={h2}>Still owed by company</h2>
-                    <ul className="divide-y divide-[#E6E9E6] overflow-hidden rounded-2xl border border-[#E6E9E6] bg-white">
+                    <ul className="divide-y divide-[#e5e7eb] overflow-hidden rounded-2xl border border-[#e5e7eb] bg-white">
                         {bizList.map((b) => {
                             const v = invoices
                                 .filter((x) => links(x, invT!, F.invBiz).some((l) => l.id === b.id))
@@ -559,10 +558,10 @@ function OfficeApp(): React.ReactElement {
                                     <button
                                         type="button"
                                         onClick={() => setBizId(b.id)}
-                                        className="flex min-h-[56px] w-full items-center gap-3 px-4 text-left hover:bg-[#F4F5F2]"
+                                        className="flex min-h-[56px] w-full items-center gap-3 px-4 text-left hover:bg-[#f4f4f4]"
                                     >
-                                        <span className="min-w-0 flex-1 truncate text-[15px] font-medium text-[#2A302D]">{b.name}</span>
-                                        <span className="text-base font-bold tabular-nums text-[#1A1F1D]">{money(v)}</span>
+                                        <span className="min-w-0 flex-1 truncate text-[15px] font-medium text-[#23292e]">{b.name}</span>
+                                        <span className="text-base font-bold tabular-nums text-[#23292e]">{money(v)}</span>
                                     </button>
                                 </li>
                             );
@@ -597,7 +596,7 @@ function OfficeApp(): React.ReactElement {
                     ))}
                 </div>
                 {rows.length === 0 && (
-                    <p className="py-8 text-center text-[15px] text-[#4B5550]">
+                    <p className="py-8 text-center text-[15px] text-[#6b7280]">
                         {filter === 'unassigned' ? 'Every job is allocated.' : 'No jobs here.'}
                     </p>
                 )}
@@ -606,37 +605,37 @@ function OfficeApp(): React.ReactElement {
                         const who = links(j, jobsT!, F.jobAssigned)[0];
                         const statusF = fieldOf(jobsT, F.jobStatus);
                         return (
-                            <li key={j.id} className="flex flex-col gap-2.5 rounded-2xl border border-[#E6E9E6] bg-white px-4 py-3.5">
+                            <li key={j.id} className="flex flex-col gap-2.5 rounded-2xl border border-[#e5e7eb] bg-white px-4 py-3.5">
                                 <button type="button" onClick={() => openRec(j, jobsT!)} className="flex flex-col gap-1.5 text-left">
                                     <span className="flex w-full items-center justify-between gap-2">
-                                        <span className="text-sm font-semibold tabular-nums text-[#4B5550]">
+                                        <span className="text-sm font-semibold tabular-nums text-[#6b7280]">
                                             #{text(j, jobsT!, F.jobNumber)}
                                             {text(j, jobsT!, F.jobDate) ? ` · ${niceDate(text(j, jobsT!, F.jobDate))}` : ' · No date'}
                                         </span>
                                         {statusF && <CellRenderer record={j} field={statusF} />}
                                     </span>
-                                    <span className="text-[17px] font-semibold leading-snug text-[#2A302D]">
+                                    <span className="text-[17px] font-semibold leading-snug text-[#23292e]">
                                         {text(j, jobsT!, F.jobTitle) || 'Untitled job'}
                                     </span>
-                                    <span className="truncate text-sm text-[#4B5550]">
+                                    <span className="truncate text-sm text-[#6b7280]">
                                         {[text(j, jobsT!, F.jobAddress), text(j, jobsT!, F.jobClientName)].filter(Boolean).join(' · ')}
                                     </span>
                                 </button>
                                 {who ? (
-                                    <span className="flex items-center gap-2 text-sm font-medium text-[#4B5550]">
+                                    <span className="flex items-center gap-2 text-sm font-medium text-[#6b7280]">
                                         <Avatar name={who.name} id={who.id} size={24} />
                                         {who.name}
                                     </span>
                                 ) : (
-                                    <div className="flex flex-wrap items-center gap-2 border-t border-[#E6E9E6] pt-2.5">
-                                        <span className="mr-auto text-sm font-semibold text-[#9A5C06]">Allocate to</span>
+                                    <div className="flex flex-wrap items-center gap-2 border-t border-[#e5e7eb] pt-2.5">
+                                        <span className="mr-auto text-sm font-semibold text-[#9a5200]">Allocate to</span>
                                         {field.map((s) => (
                                             <button
                                                 key={s.id}
                                                 type="button"
                                                 disabled={busy}
                                                 onClick={() => assign(j, s.id)}
-                                                className="flex min-h-[44px] items-center gap-1.5 rounded-full border border-[#C9CFCB] bg-white py-1 pl-1.5 pr-3 text-sm font-semibold text-[#2A302D] hover:border-[#0F6B47] hover:bg-[#E3F0E8] disabled:opacity-60"
+                                                className="flex min-h-[44px] items-center gap-1.5 rounded-full border border-[#d1d5db] bg-white py-1 pl-1.5 pr-3 text-sm font-semibold text-[#23292e] hover:border-[#15803d] hover:bg-[#f4f4f4] disabled:opacity-60"
                                             >
                                                 <Avatar name={s.name} id={s.id} size={28} />
                                                 {s.name.split(' ')[0]}
@@ -662,7 +661,7 @@ function OfficeApp(): React.ReactElement {
         return (
             <div className="flex flex-col gap-3.5 px-5 pb-6">
                 <h1 className={h1}>Invoices</h1>
-                <div className="grid grid-cols-3 gap-1.5 rounded-xl bg-[#ECEFEB] p-1" role="tablist">
+                <div className="grid grid-cols-3 gap-1.5 rounded-xl bg-[#f4f4f4] p-1" role="tablist">
                     {tabs.map(([k, l, n]) => (
                         <button
                             key={k}
@@ -670,7 +669,7 @@ function OfficeApp(): React.ReactElement {
                             role="tab"
                             aria-selected={invTab === k}
                             onClick={() => setInvTab(k)}
-                            className={`min-h-[44px] rounded-lg px-1 text-sm font-semibold ${invTab === k ? 'bg-[#0F6B47] text-white' : 'text-[#4B5550]'}`}
+                            className={`min-h-[44px] rounded-lg px-1 text-sm font-semibold ${invTab === k ? 'bg-[#23292e] text-white' : 'text-[#374151]'}`}
                         >
                             {l} {n}
                         </button>
@@ -678,7 +677,7 @@ function OfficeApp(): React.ReactElement {
                 </div>
                 {invTab === 'ready' ? (
                     readyJobs.length === 0 ? (
-                        <p className="py-8 text-center text-[15px] text-[#4B5550]">No completed jobs waiting for an invoice.</p>
+                        <p className="py-8 text-center text-[15px] text-[#6b7280]">No completed jobs waiting for an invoice.</p>
                     ) : (
                         <ul className="flex flex-col gap-3">
                             {readyJobs.map((j) => (
@@ -686,16 +685,16 @@ function OfficeApp(): React.ReactElement {
                                     <button
                                         type="button"
                                         onClick={() => openRec(j, jobsT!)}
-                                        className="flex w-full flex-col gap-1.5 rounded-2xl border border-[#E6E9E6] bg-white px-4 py-3.5 text-left"
+                                        className="flex w-full flex-col gap-1.5 rounded-2xl border border-[#e5e7eb] bg-white px-4 py-3.5 text-left"
                                     >
                                         <span className="flex w-full items-baseline justify-between gap-2">
-                                            <span className="text-sm font-semibold tabular-nums text-[#4B5550]">#{text(j, jobsT!, F.jobNumber)}</span>
+                                            <span className="text-sm font-semibold tabular-nums text-[#6b7280]">#{text(j, jobsT!, F.jobNumber)}</span>
                                             <span className="text-lg font-bold tabular-nums">{money(num(j, jobsT!, F.jobCharge), true)}</span>
                                         </span>
-                                        <span className="text-base font-semibold text-[#2A302D]">{text(j, jobsT!, F.jobClientName) || 'No client'}</span>
-                                        <span className="text-sm text-[#4B5550]">{text(j, jobsT!, F.jobTitle)}</span>
+                                        <span className="text-base font-semibold text-[#23292e]">{text(j, jobsT!, F.jobClientName) || 'No client'}</span>
+                                        <span className="text-sm text-[#6b7280]">{text(j, jobsT!, F.jobTitle)}</span>
                                         {text(j, jobsT!, F.jobReadyCheck) && (
-                                            <span className="text-sm font-medium text-[#9A5C06]">{text(j, jobsT!, F.jobReadyCheck)}</span>
+                                            <span className="text-sm font-medium text-[#9a5200]">{text(j, jobsT!, F.jobReadyCheck)}</span>
                                         )}
                                     </button>
                                 </li>
@@ -703,7 +702,7 @@ function OfficeApp(): React.ReactElement {
                         </ul>
                     )
                 ) : (invTab === 'overdue' ? overdue : unpaid).length === 0 ? (
-                    <p className="py-8 text-center text-[15px] text-[#4B5550]">All clear.</p>
+                    <p className="py-8 text-center text-[15px] text-[#6b7280]">All clear.</p>
                 ) : (
                     <ul className="flex flex-col gap-3">
                         {(invTab === 'overdue' ? overdue : unpaid).map((x) => {
@@ -714,18 +713,18 @@ function OfficeApp(): React.ReactElement {
                                     <button
                                         type="button"
                                         onClick={() => openRec(x, invT!)}
-                                        className="flex w-full flex-col gap-1.5 rounded-2xl border border-[#E6E9E6] bg-white px-4 py-3.5 text-left"
+                                        className="flex w-full flex-col gap-1.5 rounded-2xl border border-[#e5e7eb] bg-white px-4 py-3.5 text-left"
                                     >
                                         <span className="flex w-full items-baseline justify-between gap-2">
-                                            <span className="min-w-0 truncate text-sm font-semibold text-[#4B5550]">
+                                            <span className="min-w-0 truncate text-sm font-semibold text-[#6b7280]">
                                                 {text(x, invT!, F.invXero) || text(x, invT!, F.invName)}
                                             </span>
                                             <span className="flex-none text-lg font-bold tabular-nums">{money(num(x, invT!, F.invOwed), true)}</span>
                                         </span>
-                                        <span className="text-base font-semibold text-[#2A302D]">{text(x, invT!, F.invClient) || 'No client'}</span>
+                                        <span className="text-base font-semibold text-[#23292e]">{text(x, invT!, F.invClient) || 'No client'}</span>
                                         <span className="flex items-center gap-2">
                                             {statusF && <CellRenderer record={x} field={statusF} />}
-                                            <span className={`text-sm font-medium ${invTab === 'overdue' ? 'text-[#C2453B]' : 'text-[#4B5550]'}`}>
+                                            <span className={`text-sm font-medium ${invTab === 'overdue' ? 'text-[#b42318]' : 'text-[#6b7280]'}`}>
                                                 {due ? (invTab === 'overdue' && days > 0 ? `${days} days overdue · was due ${niceDate(due)}` : `Due ${niceDate(due)}`) : 'No due date'}
                                             </span>
                                         </span>
@@ -735,7 +734,7 @@ function OfficeApp(): React.ReactElement {
                         })}
                     </ul>
                 )}
-                <p className="text-sm text-[#4B5550]">Amounts are what is still owed, from the daily Xero sync. Tap one to open it.</p>
+                <p className="text-sm text-[#6b7280]">Amounts are what is still owed, from the daily Xero sync. Tap one to open it.</p>
             </div>
         );
     }
@@ -764,18 +763,18 @@ function OfficeApp(): React.ReactElement {
         return (
             <div className="flex flex-col gap-4 px-5 pb-6">
                 <h1 className={h1}>Team</h1>
-                <ul className="divide-y divide-[#E6E9E6] overflow-hidden rounded-2xl border border-[#E6E9E6] bg-white">
+                <ul className="divide-y divide-[#e5e7eb] overflow-hidden rounded-2xl border border-[#e5e7eb] bg-white">
                     {byStaff.map(({s, open, openMs, current}) => (
                         <li key={s.id} className="flex min-h-[68px] items-center gap-3 px-4 py-2">
                             <Avatar name={s.name} id={s.id} />
                             <span className="flex min-w-0 flex-1 flex-col">
-                                <span className="text-base font-semibold text-[#2A302D]">{s.name}</span>
-                                <span className="truncate text-sm text-[#4B5550]">
+                                <span className="text-base font-semibold text-[#23292e]">{s.name}</span>
+                                <span className="truncate text-sm text-[#6b7280]">
                                     {current ? text(current, jobsT!, F.jobTitle) : 'No job in progress'}
                                 </span>
                             </span>
                             <span
-                                className={`flex-none rounded-full px-2.5 py-1 text-sm font-semibold tabular-nums ${open ? 'bg-[#E3F0E8] text-[#0F6B47]' : 'bg-[#ECEFEB] text-[#4B5550]'}`}
+                                className={`flex-none rounded-full px-2.5 py-1 text-sm font-semibold tabular-nums ${open ? 'bg-[#f4f4f4] text-[#15803d]' : 'bg-[#f4f4f4] text-[#6b7280]'}`}
                             >
                                 {open ? `On · ${dur(openMs)}` : 'Off'}
                             </span>
@@ -784,24 +783,24 @@ function OfficeApp(): React.ReactElement {
                 </ul>
                 <div className="flex items-baseline justify-between">
                     <h2 className={h2}>Timesheets to approve</h2>
-                    <span className="text-sm text-[#4B5550]">Last 14 days</span>
+                    <span className="text-sm text-[#6b7280]">Last 14 days</span>
                 </div>
-                <ul className="divide-y divide-[#E6E9E6] overflow-hidden rounded-2xl border border-[#E6E9E6] bg-white">
+                <ul className="divide-y divide-[#e5e7eb] overflow-hidden rounded-2xl border border-[#e5e7eb] bg-white">
                     {byStaff.map(({s, myPending, pendingHours}) => (
                         <li key={s.id} className="flex min-h-[60px] items-center gap-3 py-2 pl-4 pr-3">
-                            <span className="flex-1 text-[15px] font-semibold text-[#2A302D]">{s.name}</span>
+                            <span className="flex-1 text-[15px] font-semibold text-[#23292e]">{s.name}</span>
                             <span className="text-base font-bold tabular-nums">{Math.round(pendingHours * 10) / 10} h</span>
                             {myPending.length > 0 ? (
                                 <button
                                     type="button"
                                     disabled={busy}
                                     onClick={() => approve(myPending, `${s.name.split(' ')[0]}'s timesheet`)}
-                                    className="h-11 rounded-lg border border-[#0F6B47] bg-white px-3.5 text-sm font-semibold text-[#0F6B47] hover:bg-[#E3F0E8] disabled:opacity-60"
+                                    className="h-11 rounded-lg border border-[#15803d] bg-white px-3.5 text-sm font-semibold text-[#15803d] hover:bg-[#f4f4f4] disabled:opacity-60"
                                 >
                                     Approve
                                 </button>
                             ) : (
-                                <span className="flex h-11 items-center gap-1 px-2.5 text-sm font-semibold text-[#1F8A4C]">
+                                <span className="flex h-11 items-center gap-1 px-2.5 text-sm font-semibold text-[#15803d]">
                                     <CheckIcon size={16} weight="bold" />
                                     Up to date
                                 </span>
@@ -814,7 +813,7 @@ function OfficeApp(): React.ReactElement {
                         type="button"
                         disabled={busy}
                         onClick={() => approve(pending, 'All timesheets')}
-                        className="h-[52px] rounded-xl bg-[#0F6B47] text-base font-semibold text-white hover:bg-[#0A4F34] disabled:opacity-60"
+                        className="h-[52px] rounded-xl bg-[#22c55e] text-base font-bold text-[#1a1a1a] hover:brightness-95 disabled:opacity-60"
                     >
                         Approve all
                     </button>
@@ -831,17 +830,17 @@ function OfficeApp(): React.ReactElement {
     ];
 
     return (
-        <div className="relative flex h-full min-h-full flex-col bg-[#F4F5F2] font-sans text-[#2A302D]">
+        <div className="relative flex h-full min-h-full flex-col bg-[#f4f4f4] font-['Manrope',system-ui,sans-serif] text-[#23292e]">
             <main className="mx-auto w-full max-w-3xl flex-1 overflow-y-auto pb-24" tabIndex={0}>
                 <div className="flex items-center justify-between gap-3 px-5 pb-3 pt-4">
                     <button
                         type="button"
                         onClick={() => setSheet(true)}
                         aria-label={`Showing ${biz ? biz.name : 'all companies'}. Switch company`}
-                        className="flex min-h-[44px] min-w-0 max-w-[300px] items-center gap-2 rounded-full border border-[#C9CFCB] bg-white px-3 text-[15px] font-semibold text-[#2A302D] hover:bg-[#E3F0E8]"
+                        className="flex min-h-[44px] min-w-0 max-w-[300px] items-center gap-2 rounded-full border border-[#d1d5db] bg-white px-3 text-[15px] font-semibold text-[#23292e] hover:bg-[#f4f4f4]"
                     >
                         <span className="truncate">{biz ? shortBiz(biz.name) : 'All companies'}</span>
-                        <CaretDownIcon size={16} className="flex-none text-[#7C857F]" />
+                        <CaretDownIcon size={16} className="flex-none text-[#6b7280]" />
                     </button>
                     <span title={text(me, staffT, F.staffName)}>
                         <Avatar name={text(me, staffT, F.staffName)} id={me.id} size={44} />
@@ -854,7 +853,7 @@ function OfficeApp(): React.ReactElement {
             </main>
             <nav
                 aria-label="Office app"
-                className="fixed bottom-0 left-0 right-0 z-20 flex justify-around border-t border-[#E6E9E6] bg-white/90 px-2 pb-5 pt-1.5 backdrop-blur"
+                className="fixed bottom-0 left-0 right-0 z-20 flex justify-around border-t border-[#e5e7eb] bg-white/90 px-2 pb-5 pt-1.5 backdrop-blur"
             >
                 {tabs.map(([k, label, icon]) => (
                     <button
@@ -862,7 +861,7 @@ function OfficeApp(): React.ReactElement {
                         type="button"
                         aria-current={screen === k ? 'page' : undefined}
                         onClick={() => setScreen(k)}
-                        className={`flex min-h-[52px] max-w-[160px] flex-1 flex-col items-center justify-center gap-0.5 text-xs font-semibold ${screen === k ? 'text-[#0F6B47]' : 'text-[#4B5550]'}`}
+                        className={`flex min-h-[52px] max-w-[160px] flex-1 flex-col items-center justify-center gap-0.5 text-xs font-semibold ${screen === k ? 'text-[#15803d]' : 'text-[#6b7280]'}`}
                     >
                         {icon}
                         {label}
@@ -871,10 +870,10 @@ function OfficeApp(): React.ReactElement {
             </nav>
             {sheet && (
                 <div className="fixed inset-0 z-40 flex flex-col justify-end" role="dialog" aria-modal="true" aria-label="Switch company">
-                    <button type="button" aria-label="Close" className="absolute inset-0 bg-[#1A1F1D]/40" onClick={() => setSheet(false)} />
+                    <button type="button" aria-label="Close" className="absolute inset-0 bg-[#23292e]/40" onClick={() => setSheet(false)} />
                     <div className="relative mx-auto flex w-full max-w-xl flex-col gap-3.5 rounded-t-[20px] bg-white px-5 pb-9 pt-2.5 shadow-lg">
-                        <span aria-hidden="true" className="mx-auto h-1.5 w-10 rounded-full bg-[#C9CFCB]" />
-                        <span className="text-xs font-bold uppercase tracking-[0.14em] text-[#0F6B47]">Showing</span>
+                        <span aria-hidden="true" className="mx-auto h-1.5 w-10 rounded-full bg-[#d1d5db]" />
+                        <span className="text-xs font-bold uppercase tracking-[0.14em] text-[#15803d]">Showing</span>
                         {[{id: ALL, name: 'All companies'}, ...bizList].map((b) => {
                             const sel = b.id === bizId;
                             return (
@@ -886,20 +885,20 @@ function OfficeApp(): React.ReactElement {
                                         setBizId(b.id);
                                         setSheet(false);
                                     }}
-                                    className={`flex min-h-[56px] items-center gap-3 rounded-2xl border px-3.5 text-left ${sel ? 'border-[#0F6B47] bg-[#E3F0E8]' : 'border-[#E6E9E6] bg-white'}`}
+                                    className={`flex min-h-[56px] items-center gap-3 rounded-2xl border px-3.5 text-left ${sel ? 'border-[#15803d] bg-[#f4f4f4]' : 'border-[#e5e7eb] bg-white'}`}
                                 >
                                     <span className="min-w-0 flex-1 truncate text-base font-semibold">{b.name}</span>
-                                    {sel && <CheckIcon size={20} weight="bold" className="text-[#0F6B47]" />}
+                                    {sel && <CheckIcon size={20} weight="bold" className="text-[#15803d]" />}
                                 </button>
                             );
                         })}
-                        <div className="flex items-center gap-3 border-t border-[#E6E9E6] pt-3.5">
+                        <div className="flex items-center gap-3 border-t border-[#e5e7eb] pt-3.5">
                             <Avatar name={text(me, staffT, F.staffName)} id={me.id} />
                             <span className="min-w-0 flex-1 truncate text-base font-semibold">{text(me, staffT, F.staffName)}</span>
                             <button
                                 type="button"
                                 onClick={signOut}
-                                className="h-11 flex-none rounded-lg border border-[#C9CFCB] bg-white px-4 text-[15px] font-semibold text-[#2A302D] hover:bg-[#ECEFEB]"
+                                className="h-11 flex-none rounded-lg border border-[#d1d5db] bg-white px-4 text-[15px] font-semibold text-[#23292e] hover:bg-[#f4f4f4]"
                             >
                                 Sign out
                             </button>
@@ -910,9 +909,9 @@ function OfficeApp(): React.ReactElement {
             {toast && (
                 <div
                     role="status"
-                    className="fixed bottom-24 left-4 right-4 z-30 flex items-start gap-2 rounded-xl bg-[#1A1F1D] px-4 py-3 text-base text-white shadow-lg sm:left-auto sm:right-6 sm:max-w-sm"
+                    className="fixed bottom-24 left-4 right-4 z-30 flex items-start gap-2 rounded-xl bg-[#23292e] px-4 py-3 text-base text-white shadow-lg sm:left-auto sm:right-6 sm:max-w-sm"
                 >
-                    <CheckCircleIcon size={20} weight="fill" className="mt-0.5 flex-none text-[#6CC270]" />
+                    <CheckCircleIcon size={20} weight="fill" className="mt-0.5 flex-none text-[#22c55e]" />
                     <span>{toast}</span>
                 </div>
             )}
