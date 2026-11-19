@@ -621,28 +621,27 @@ function OfficeApp(): React.ReactElement {
                                         {[text(j, jobsT!, F.jobAddress), text(j, jobsT!, F.jobClientName)].filter(Boolean).join(' · ')}
                                     </span>
                                 </button>
-                                {who ? (
-                                    <span className="flex items-center gap-2 text-sm font-medium text-[#6b7280]">
-                                        <Avatar name={who.name} id={who.id} size={24} />
-                                        {who.name}
+                                <div className="flex flex-wrap items-center gap-2 border-t border-[#e5e7eb] pt-2.5">
+                                    <span className={`mr-auto text-sm font-semibold ${who ? 'text-[#6b7280]' : 'text-[#9a5200]'}`}>
+                                        {who ? 'Allocated to' : 'Allocate to'}
                                     </span>
-                                ) : (
-                                    <div className="flex flex-wrap items-center gap-2 border-t border-[#e5e7eb] pt-2.5">
-                                        <span className="mr-auto text-sm font-semibold text-[#9a5200]">Allocate to</span>
-                                        {field.map((s) => (
+                                    {field.map((s) => {
+                                        const on = !!who && who.id === s.id;
+                                        return (
                                             <button
                                                 key={s.id}
                                                 type="button"
                                                 disabled={busy}
-                                                onClick={() => assign(j, s.id)}
-                                                className="flex min-h-[44px] items-center gap-1.5 rounded-full border border-[#d1d5db] bg-white py-1 pl-1.5 pr-3 text-sm font-semibold text-[#23292e] hover:border-[#15803d] hover:bg-[#f4f4f4] disabled:opacity-60"
+                                                aria-pressed={on}
+                                                onClick={() => !on && assign(j, s.id)}
+                                                className={`flex min-h-[44px] items-center gap-1.5 rounded-full border py-1 pl-1.5 pr-3 text-sm font-semibold disabled:opacity-60 ${on ? 'border-[#23292e] bg-[#23292e] text-white' : 'border-[#d1d5db] bg-white text-[#23292e] hover:border-[#15803d] hover:bg-[#f4f4f4]'}`}
                                             >
                                                 <Avatar name={s.name} id={s.id} size={28} />
                                                 {s.name.split(' ')[0]}
                                             </button>
-                                        ))}
-                                    </div>
-                                )}
+                                        );
+                                    })}
+                                </div>
                             </li>
                         );
                     })}

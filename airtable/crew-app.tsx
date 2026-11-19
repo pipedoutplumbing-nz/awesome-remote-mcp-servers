@@ -679,6 +679,14 @@ function CrewApp(): React.ReactElement {
         const before = (cell(job, jobsT, F.jobBefore) as unknown[] | null)?.length || 0;
         const after = (cell(job, jobsT, F.jobAfter) as unknown[] | null)?.length || 0;
         const canEdit = jobsT.hasPermissionToUpdateRecords([job]);
+        const isBoss = /owner|admin/i.test(selectName(me!, staffT, F.staffRole));
+        const assignedTo = links(job, jobsT, F.jobAssigned)[0];
+        const activeStaff = staff.filter((s) => cell(s, staffT, F.staffActive) === true);
+        const reassign = (sid: string, nm: string): void =>
+            void run(
+                () => jobsT.updateRecordAsync(job, {[F.jobAssigned]: [{id: sid}]}),
+                `Job #${text(job, jobsT, F.jobNumber)} allocated to ${nm.split(' ')[0]}.`,
+            );
 
         const start = (): void =>
             void run(async () => {
@@ -770,6 +778,31 @@ function CrewApp(): React.ReactElement {
                             </div>
                         )}
                     </div>
+
+                    {isBoss && canEdit && (
+                        <section className="flex flex-col gap-2.5">
+                            <h2 className="text-[17px] font-semibold text-[#23292e]">Allocated to</h2>
+                            <div className="flex flex-wrap gap-2">
+                                {activeStaff.map((s) => {
+                                    const nm = text(s, staffT, F.staffName);
+                                    const on = !!assignedTo && assignedTo.id === s.id;
+                                    return (
+                                        <button
+                                            key={s.id}
+                                            type="button"
+                                            disabled={busy}
+                                            aria-pressed={on}
+                                            onClick={() => !on && reassign(s.id, nm)}
+                                            className={`flex min-h-[44px] items-center gap-1.5 rounded-full border py-1 pl-1.5 pr-3 text-sm font-semibold disabled:opacity-60 ${on ? 'border-[#23292e] bg-[#23292e] text-white' : 'border-[#d1d5db] bg-white text-[#23292e] hover:bg-[#f4f4f4]'}`}
+                                        >
+                                            <Avatar name={nm} id={s.id} size={28} />
+                                            {nm.split(' ')[0]}
+                                        </button>
+                                    );
+                                })}
+                            </div>
+                        </section>
+                    )}
 
                     {canEdit && st === 'Scheduled' && (
                         <button
